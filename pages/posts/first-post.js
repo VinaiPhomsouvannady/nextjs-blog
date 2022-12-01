@@ -12,9 +12,6 @@ export default function FirstPost() {
 
     </Head>
       <h1>First!!!!</h1>
-      <h2>
-        <Link href="/">Where does this thing go?</Link>
-      </h2>
     </Layout>
   );
 }
