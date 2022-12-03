@@ -113,9 +113,9 @@ export default function Game() {
             })}
           </div>
         </div>
-        <div className="modal">
+        <div className={styles.game__menu}>
         <div className={styles.modal__title}>{modalTitle}</div>
-        <button onClick={reset}>New Game</button>
+        <button className = {styles.button} onClick={reset}>New Game</button>
       </div>
         <br/>
         <div className={styles.game}>
