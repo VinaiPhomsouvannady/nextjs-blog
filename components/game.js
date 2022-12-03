@@ -1,106 +1,127 @@
-import Board from '../components/board';
+import { useEffect, useState } from "react";
+import styles from './game.module.css';
+import Link from 'next/link';
 
 
-class Game extends React.Component {
-    constructor(props) {
-      super(props);
-      this.state = {
-        history: [
-          {
-            squares: Array(9).fill(null),
-          }
-        ],
-        stepNumber: 0,
-        xIsNext: true,
-      };
+
+  const WINNING_COMBO = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+  ];
+
+export default function Game() {
+    const [xTurn, setXTurn] = useState(true);
+    const [won, setWon] = useState(false);
+    const [wonCombo, setWonCombo] = useState([]);
+    const [boardData, setBoardData] = useState({
+      0: "",
+      1: "",
+      2: "",
+      3: "",
+      4: "",
+      5: "",
+      6: "",
+      7: "",
+      8: "",
+    });
+
+    const [isDraw, setIsDraw] = useState(false);
+    const [modalTitle, setModalTitle] = useState("");
+    useEffect(() => {
+      checkWinner();
+      checkDraw();
+    }, [boardData]);
+
+  const updateBoardData = (idx) => {
+    if (!boardData[idx] && !won) {
+      //will check whether specify idx is empty or not
+      let value = xTurn === true ? "X" : "O";
+      setBoardData({ ...boardData, [idx]: value });
+      setXTurn(!xTurn);
     }
+  };
 
-    handleClick(i) {
-      const history = this.state.history.slice(0, this.state.stepNumber + 1);
-      const current = history[history.length - 1];
-      const squares = current.squares.slice();
-      if (calculateWinner(squares) || squares[i]) {
+  const checkDraw = () => {
+    let check = Object.keys(boardData).every((v) => boardData[v]);
+    setIsDraw(check);
+    if (check) setModalTitle("Match Draw!!!");
+  };
+
+  const checkWinner = () => {
+    WINNING_COMBO.map((bd) => {
+      const [a, b, c] = bd;
+      if (
+        boardData[a] &&
+        boardData[a] === boardData[b] &&
+        boardData[a] === boardData[c]
+      ) {
+        setWon(true);
+        setWonCombo([a, b, c]);
+        setModalTitle(`Player ${!xTurn ? "X" : "O"} Won!!!`);
+
         return;
       }
-      squares[i] = this.state.xIsNext ? 'X' : 'O';
-      this.setState({
-        history: history.concat(
-          [
-            {
-              squares: squares,
-            }
-          ]
-        ),
-        stepNumber: history.length,
-        xIsNext: !this.state.xIsNext,
-      });
-    }
+    });
+  };
 
-    jumpTo(step) {
-      this.setState({
-        stepNumber:step,
-        xIsNext:(step% 2) === 0
-      })
-    }
-
-    render() {
-      const history = this.state.history;
-      const current = history[this.state.stepNumber];
-      const winner = calculateWinner(current.squares);
-
-      const moves = history.map((step,move) => {
-        const desc = move ? 
-        'Go to move #' + move :
-        'Go to game start';
-        return (
-          <li key={move}>
-            <button onClick={() => this.jumpTo(move)}>
-              {desc}
-            </button>
-          </li>
-        )
-      })
-      let status;
-      if(winner) {
-        status = 'Winner: ' + winner;
-      } else {
-        status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
-      }
+  const reset = () => {
+    setBoardData({
+      0: "",
+      1: "",
+      2: "",
+      3: "",
+      4: "",
+      5: "",
+      6: "",
+      7: "",
+      8: "",
+    });
+    setXTurn(true);
+    setWon(false);
+    setWonCombo([]);
+    setIsDraw(false);
+    setModalTitle("");
+  };
 
 
-      return (
-        <div className="game">
-          <div className="game-board">
-            <Board
-              squares={current.squares}
-              onClick={(i) => this.handleClick(i)}
-            />
+    return (
+      <div>
+        <h1 className={styles.game__menu}>Tic Tac Toe</h1>
+        <div className={styles.game}>
+          <div className={styles.game__menu}>
+            <p>{xTurn === true ? "X Turn" : "O Turn"}</p>
+            <p>{`Game Won:${won}`}</p>
           </div>
-          <div className="game-info">
-            <div>{status}</div>
-            <ol>{moves}</ol>
+          <div className={styles.game__board}>
+            {[...Array(9)].map((v, idx) => {
+              return (
+                <div
+                onClick={() => {
+                  updateBoardData(idx);
+                }}
+                  key={idx}
+                  className={styles.square}>
+                  {boardData[idx]}
+                </div>
+              );
+            })}
           </div>
         </div>
-      );
-    }
-  }
-
-  function calculateWinner(squares) {
-    const lines = [
-      [0, 1, 2],
-      [3, 4, 5],
-      [6, 7, 8],
-      [0, 3, 6],
-      [1, 4, 7],
-      [2, 5, 8],
-      [0, 4, 8],
-      [2, 4, 6],
-    ];
-    for (let i = 0; i < lines.length; i++) {
-      const [a, b, c] = lines[i];
-      if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-        return squares[a];
-      }
-    }
-    return null;
+        <div className="modal">
+        <div className={styles.modal__title}>{modalTitle}</div>
+        <button onClick={reset}>New Game</button>
+      </div>
+        <br/>
+        <div className={styles.game}>
+        <a href="https://codewithmarish.com/post/create-a-tic-tac-toe-game-using-next-js">Credit codewithmarish.com/post/create-a-tic-tac-toe-game-using-next-js </a>
+        <Link href="/">← Back to where?</Link>
+        </div>
+      </div>
+    );
   }
