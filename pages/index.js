@@ -27,7 +27,10 @@ export default function Home({ allPostsData }) {
           (I learned how to make this site using{' '}
           <a href="https://nextjs.org/learn">the Next.js tutorial</a>.)
         </p>
+        <a href="https://github.com/VinaiPhomsouvannady/nextjs-blog">Site Github</a>
+        <div>
         <Link href="/THEETERNALLIGHT">Where does this thing go?</Link>
+        </div>
       </section>
       <section className = {'${utilStyles.headingMd} ${utilStyles.padding1px}'}>
         <h2 className={utilStyles.hadingLg}>Blog</h2>
