@@ -1,4 +1,4 @@
-Follwed [Learn Next.js](https://nextjs.org/learn) to create a blog site
+Followed [Learn Next.js](https://nextjs.org/learn) to create a blog site
 
 Created site using Next.JS
 

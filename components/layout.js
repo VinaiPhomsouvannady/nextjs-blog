@@ -5,7 +5,7 @@ import utilStyles from '../styles/utils.module.css';
 import Link from 'next/link';
 
 const name = 'Vinboi for LIFE';
-export const siteTitle = 'WHAT YOU LOOKIN AT';
+export const siteTitle = 'WHAT YOU LOOKIN AT!!';
 
 export default function Layout({ children, home }) {
   return (
